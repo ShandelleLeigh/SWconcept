@@ -3,55 +3,22 @@ import React, { Component, Fragment, } from 'react';
 //import { connect } from 'react-redux';
 import {
     Header, Button, Grid, Input,
-    Form, option,
+    Form, option, Search
   } from 'semantic-ui-react';
 //import logNewCall from '../../actions/calls.js';
-
+import getCustomerData from '../../actions/searchDB.js';
+import _ from 'lodash';
 
 class LogNewCall extends Component{
   state = {
     call:'', action:'', validity: false,
-    customerName: '', callType:'',
-    callDescription:'', hardwareInvolved:'',
+    customerName: '', cust_id:'', cust_org:'', cust_site:'',
+    callType:'', callDescription:'', hardwareInvolved:'',
+    isLoading: false, results: [], searchValue: '',
   };
 
-  // validations = () => {
-  //   if (value != '' ){
-  //     alert('Fill out required fields')
-  //   } else {
-  //     this.setState({validations: true})
-  //     alert('Requirements met')
-  //   }
-  //   console.log('validation')
-  // }
   callString = '';
-
-  autoFill = () => {
-    let fields = [
-      {cust_id: 'AnnaB', cust_name: 'Anna Bishop', companyname: 'Ares Computer Services', site: 'London'  },
-      {cust_id: 'lenam', cust_name: 'Lena Mikkelsson', companyname: 'Ares Computer Services', site: 'London'  },
-      {cust_id: 'stever', cust_name: 'Steve Robinson', companyname: 'Ares Computer Services', site: 'London'  },
-      {cust_id: 'mikeS', cust_name: 'Michaels S', companyname: 'Ares Computer Services', site: 'London'  },
-
-    ];
-
-    return fields.map( field =>
-      <Fragment>
-        <textbox
-          key={field.cust_id}
-          value={field.cust_id}
-          name={field.cust_id} />
-        <textbox
-          key={field.cust_id}
-          value={field.companyname}
-          name={field.companyname} />
-        <textbox
-          key={field.cust_id}
-          value={field.site}
-          name={field.site} />
-      </Fragment>
-    )
-  };
+  searchEntered = {};
 
   getFormText = () => {
     let s = this.state
@@ -63,40 +30,22 @@ class LogNewCall extends Component{
     hwin !== '' ? this.callString += 'hwin?' + hwin : this.callString += ''
     // this.callstring.replace(/(\s)/g, '_')
     console.log(this.callString)
-    return(
-    <p>{this.callString}</p>
-    )
   }
-
-  handleChange = (e ) => {
+  handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
     console.log(e.target.name+' '+e.target.value);
   }
-
-  handleBlur = (e ) => {
-    console.log("on blur")
+  // handleBlur = (e ) => { }
+ handleClickSubmit = (e) => {
+  if( this.state.call === 'new' ){/*Submit Form function}*/}
+  }
+  //TODO: get this handleClick to work, and print searchResults.data
+  handleClick = (e) => { console.log(this.searchResults)}
+  consoleLog = () => {
+    let words = this.state.searchValue
+    console.log('searchValue '+ words)
   }
 
-  handleClick = (e) => {
-    // let validations = this.state.validations
-    // this.state.action = 'save'
-    // validations === true ?
-    // console.log(this.state) :
-    // console.log('validations not met. '+ this.state.hardwareInvolved)
-    this.getFormText();
-  }
-
-  saveCall = (e) => {
-    e.preventDefault();
-    if( this.state.call === 'new' ){
-      //logNewCall();
-    }
-      return(
-        <Fragment>
-          {this.getFormText}
-        </Fragment>
-      )
-  }
 
   DropOptions = () => {
     const items = [
@@ -121,6 +70,62 @@ class LogNewCall extends Component{
     })
   }
 
+  nameInput = () => {
+    return (
+      <Input
+        placeholder='Customer Name'
+        icon='user circle outline'
+        type='text'
+        name='customerName'
+        labelPosition='left'
+        onChange={this.handleChange}
+        value={this.state.customerName}
+        onKeyPress={this.handleKeyEnter}
+        //required='true'
+      />
+    )
+  }
+  resetComponent = () => this.setState({ isLoading: false, results: [], searchValue: '' })
+  //handleResultSelect = (e, { result }) => this.setState({ value: result.title })
+  searchResults = [];
+  //TODO: make debouce/timeout method to delay quering db until pause in typing.
+  handleResultSelect = (e, { result }) => {
+    console.log(result)
+    // let result.
+    this.resetComponent
+    this.setState({ searchValue: result.title })
+  };
+  handleSearchChange = (e) => {
+    const value = e.target.value
+    this.setState({searchValue: value})
+  };
+  handleKeyEnter = (e) => {
+    let value = e.target.value
+    if (e.key === 'Enter') {
+      console.log('queryCustData ' + value);
+      this.setState({ isLoading: true })
+    }
+    //this.queryCustData();
+  };
+
+  setTargetValue = (e) => this.setState({searchValue: e.target.value});
+
+  searchField = () => {
+    const { isLoading, searchValue, results } = this.state
+    return (
+      <Search
+        placeholder='Customer Name Search'
+        loading={isLoading}
+        onResultSelect={this.handleResultSelect}
+        onSearchChange={this.handleSearchChange}
+        onKeyPress={this.handleKeyEnter}
+        results={results}
+        value={searchValue}
+        //{...this.props}
+      />
+    )
+  };
+
   render() {
     const {customerName, callType, callDescription, hardwareInvolved} = this.state
     return (
@@ -129,16 +134,40 @@ class LogNewCall extends Component{
             <Header as='h1' textAlign='center'>Log New</Header>
             <Form>
               <Form.Field>
+                {/* <this.nameInput/> */}
+                <this.searchField/>
+              </Form.Field>
+              <Form.Field>
                 <Input
-                  placeholder='Customer Name'
-                  icon='user circle outline'
+                  placeholder='Customer ID'
                   type='text'
-                  name='customerName'
+                  name='cust_id'
                   labelPosition='left'
                   onChange={this.handleChange}
-                  value={this.state.customerName}
-                  //onBlur={this.handleBlur}
-                  required='true'
+                  value={this.state.cust_id}
+                  // required='true'
+                />
+              </Form.Field>
+              <Form.Field>
+                <Input
+                  placeholder='Main Organization'
+                  type='text'
+                  name='cust_org'
+                  labelPosition='left'
+                  onChange={this.handleChange}
+                  value={this.state.cust_org}
+                  // required='true'
+                />
+              </Form.Field>
+              <Form.Field>
+                <Input
+                  placeholder='Main Site'
+                  type='text'
+                  name='cust_site'
+                  labelPosition='left'
+                  onChange={this.handleChange}
+                  value={this.state.cust_site}
+                  // required='true'
                 />
               </Form.Field>
               <Form.Field>
@@ -150,7 +179,7 @@ class LogNewCall extends Component{
                   onChange={this.handleChange}
                   value={this.state.callType}
                   //onBlur={this.handleBlur}
-                  required='true'
+                  // required='true'
                 >
                   <this.DropOptions/>
                 </select>
@@ -165,7 +194,7 @@ class LogNewCall extends Component{
                   onChange={this.handleChange}
                   value={this.state.callDescription.value}
                   //onBlur={this.handleBlur}
-                  required='true'
+                  // required='true'
                 ></textarea>
               </Form.Field>
               <Form.Field>
@@ -176,31 +205,27 @@ class LogNewCall extends Component{
                   onChange={this.handleChange}
                   value={this.state.hardwareInvolved.value}
                   //onBlur={this.handleBlur}
-                  required={false}
+                  // required={false}
                 />
               </Form.Field>
               <Form.Field>
                 <Button
+                  onClick={this.handleClickSubmit}
+                  value=' submit'
+                >Submit</Button>
+                <Button
                   onClick={this.handleClick}
-                  value='save'
-                >Save</Button>
+                  value='printState'
+                >Print State</Button>
               </Form.Field>
             </Form>
         </Grid.Column>
         <Grid.Column>
-          {/* }{this.autoFill} */}
+          {/*<this.autoFill/>*/}
         </Grid.Column>
       </Grid>
     );
   }
 }
-
-const styles = {
-  //someStyle: {
-  //  marginRight: '0',
-  //  }
-}
-
-
 
 export default LogNewCall;
