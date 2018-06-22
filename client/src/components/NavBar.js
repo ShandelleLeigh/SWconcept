@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Menu, Header, Divider, Image, Grid, } from 'semantic-ui-react';
+import React, { Component, Fragment } from 'react';
+import { Menu, Header, Divider, Image, Grid } from 'semantic-ui-react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { handleLogout } from '../actions/auth';
@@ -35,8 +35,8 @@ class NavBar extends Component {
 
   render() {
     return (
-      <div>
-        <Menu pointing secondary>
+      <Fragment>
+        <Menu pointing secondary color="red" active="true" inverted>
           <Grid style={styles.width} computer={16}>
             <Grid.Column computer={8}>
               <Link to='/'>
@@ -55,7 +55,7 @@ class NavBar extends Component {
             </Grid.Column>
           </Grid>
         </Menu>
-      </div>
+      </Fragment>
     );
   }
 }

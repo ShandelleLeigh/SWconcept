@@ -1,5 +1,6 @@
 import React, { Component, Fragment,  } from 'react';
 import { Header, Grid, Segment } from 'semantic-ui-react';
+import CustomerSearchTable from './small_components/CustomerSearchTable.js';
 
 class Dash extends Component {
   render() {
@@ -8,7 +9,7 @@ class Dash extends Component {
         <Header as='h1' textAlign='left'>  Dashboard</Header>
         <Grid>
           <Grid.Column computer={8}>
-            <div as='Segment' >
+            <Segment>
               <Header as='h1' textAlign='center'>Stats</Header>
                 <Segment>
                   <p>Words words words words words words words words
@@ -27,10 +28,10 @@ class Dash extends Component {
                   </p>
                 </Segment>
 
-            </div>
+            </Segment>
           </Grid.Column>
           <Grid.Column computer={8}>
-            <div as='Segment' >
+            <Segment >
               <Header as='h1' textAlign='center'>Graphs</Header>
               <Segment>
                 <p>Words words words words words words words words
@@ -49,7 +50,11 @@ class Dash extends Component {
                 </p>
               </Segment>
 
-            </div>
+              <Segment>
+              <CustomerSearchTable/>
+              </Segment>
+
+            </Segment>
           </Grid.Column>
         </Grid>
       </Fragment>

@@ -3,6 +3,8 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Header, Grid, Segment, Table } from 'semantic-ui-react';
 import { Switch, Route } from 'react-router-dom';
+import AssignedToMe from './AssignedToMe';
+import UnassignedCalls from './UnassignedCalls';
 //import LogNewCall from './LogNewCall';
 //import {getCustomerData} from '../../actions/calls.js';
 
@@ -34,7 +36,6 @@ class Calls extends Component {
               <Table.Cell>Unassigned</Table.Cell>
             </Table.Row>
           </Table>
-
     )
   }
 
@@ -43,22 +44,17 @@ class Calls extends Component {
       <Fragment>
         <Grid>
           <Grid.Column style={styles.segmnt} computer={8}>
-            <Segment style={styles.segmnt}>
-              <Header as='h1' textAlign='center'>Active Calls</Header>
-              <this.activeCalls/>
-
-            </Segment>
+            <AssignedToMe />
+            <UnassignedCalls />
           </Grid.Column>
           <Grid.Column computer={8}>
-            <div as='Segment' style={styles.segmnt}>
-              <Header as='h1' textAlign='center'>Call Stats</Header>
+            <Segment style={styles.segmnt}>
+              <Header as='h1' textAlign='center'>Notifications</Header>
               <Segment>
-                <p>Words words words words words words words words
-                  words words words words words words words words
-                  words words words words words words words words
-                  words words words words words words words words
-                  words words words words words words words words
-                </p>
+                <Header as='h3' textAlign='center'>Known Issues</Header>
+                  <p>Email Network is spotty.  Getting Fixed.</p>
+                <Header as='h3' textAlign='center'>Other</Header>
+                  <p>Pot luck Friday</p>
               </Segment>
               <Segment>
                 <p>Words words words words words words words words
@@ -68,7 +64,15 @@ class Calls extends Component {
                   words words words words words words words words
                 </p>
               </Segment>
-            </div>
+              <Segment>
+                <p>Words words words words words words words words
+                  words words words words words words words words
+                  words words words words words words words words
+                  words words words words words words words words
+                  words words words words words words words words
+                </p>
+              </Segment>
+            </Segment>
           </Grid.Column>
         </Grid>
       </Fragment>

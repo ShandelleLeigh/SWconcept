@@ -14,3 +14,8 @@
 !/tmp/.keep
 
 .byebug_history
+
+client/src/actions/calls.js
+old.ico
+opencall_table.txt
+compar*

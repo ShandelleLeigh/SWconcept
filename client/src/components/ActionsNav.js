@@ -1,25 +1,51 @@
 import React, { Component, Fragment } from 'react';
 import { Menu, Header, Divider } from 'semantic-ui-react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { handleLogout } from '../actions/auth';
 
 class NavBar extends Component {
-  state = { call: ''}
+  state = { call: '', activeItem: ''}
+
+  handleItemClick = (e, { name }) => {
+    this.state.activeItem = {name}
+  }
+
+  menuItems = () => {
+     const Nav = props => (
+      <NavLink
+        exact
+        {...props}
+        activeClassName="active"
+      />
+     );
+
+    const items = [
+      {name:'Log New', path:'/calls/log_new'},
+      {name:'Update Call', path:'/calls/update'},
+      {name:'Close Call', path:'/calls/close'},
+      //{name:'fourth', path:'/'},
+      //{name:'fifth', path:'/'},
+    ]
+
+    return items.map(item => {
+      let name = item.name
+      return (
+        <Menu.Item
+          key={name}
+          as={Nav} to={item.path}
+          name={name}
+          onClick={this.handleItemClick}
+        />
+      )
+    })
+  }
 
   render() {
     return (
       <Fragment>
-        <Menu pointing secondary>
-          <Link to='/calls/log_new'>
-            <Menu.Item name='Log New'/>
-          </Link>
-          <Link to='/calls/update'>
-            <Menu.Item name='Update Call' />
-          </Link>
-          <Link to='/calls/close'>
-            <Menu.Item name='Close Call' />
-          </Link>
+        <Menu inverted borderless color="teal">
+          {this.menuItems()}
         </Menu>
       </Fragment>
     );
@@ -35,7 +61,10 @@ class NavBar extends Component {
 // }
 
 const mapStateToProps = state => {
-  return { user: state.user };
+  return {
+    activeItem: state.activeItem,
+    user: state.user
+  };
 };
 
 export default withRouter(connect(mapStateToProps)(NavBar));
